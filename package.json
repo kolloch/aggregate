@@ -1,0 +1,21 @@
+{
+  "name": "aggregate",
+  "version": "0.0.1",
+  "description": "Aggregate function calls accross a tick",
+  "author" : {
+      "name" : "Peter Kolloch",
+      "email" : "kolloch.kpj@gmail.com"
+  },
+  "license" : "MIT/X11",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script"
+  },
+  "dependencies" : {
+    "coffee-script": "*",
+    "winston": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "expect.js": "*"
+  }
+}

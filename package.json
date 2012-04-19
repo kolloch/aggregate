@@ -3,8 +3,12 @@
   "version": "0.0.1",
   "description": "Aggregate function calls accross a tick",
   "author" : {
-      "name" : "Peter Kolloch",
-      "email" : "kolloch.kpj@gmail.com"
+    "name" : "Peter Kolloch",
+    "email" : "kolloch.kpj@gmail.com"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/pkolloch/aggregate.git"
   },
   "license" : "MIT/X11",
   "scripts": {

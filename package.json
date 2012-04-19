@@ -8,7 +8,7 @@
   },
   "repository" : {
     "type" : "git",
-    "url" : "http://github.com/pkolloch/aggregate.git"
+    "url" : "http://github.com/kolloch/aggregate.git"
   },
   "license" : "MIT/X11",
   "scripts": {

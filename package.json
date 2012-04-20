@@ -1,6 +1,6 @@
 {
   "name": "aggregate",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Aggregate function calls accross a tick",
   "author" : {
     "name" : "Peter Kolloch",

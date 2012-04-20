@@ -19,24 +19,29 @@ aggregate = (opts, func) ->
 
   performCall = logger.tracer 'performCall', ->
     keysAsArray = (k for k of keys)
+    processResults = createProcessResultsForCalls calls
+  
+    keys  = {} 
+    calls = []
 
     func keysAsArray, processResults
 
-  processResults = logger.tracer 'processResults', (err,results) ->
-    if err?
-      for call in calls
-        call.callback err 
-    else
-      for call in calls
-        do (call) ->
-          {callback,idArray} = call
-          idResults = {}
-          for id in idArray
-            result = results[id]
-            if result?
-              idResults[id] = result
+  createProcessResultsForCalls = (calls) ->
+    return logger.tracer 'processResults', (err,results) ->
+      if err?
+        for call in calls
+          call.callback err 
+      else
+        for call in calls
+          do (call) ->
+            {callback,idArray} = call
+            idResults = {}
+            for id in idArray
+              result = results[id]
+              if result?
+                idResults[id] = result
 
-          callback null, idResults
+            callback null, idResults
 
   ret = (idArray, callback) ->
     if idArray.length == 0

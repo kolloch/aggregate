@@ -2,16 +2,16 @@ aggregate = require '../index.js'
 expect    = require 'expect.js'
 
 logger = (func=null) ->
-  log = []
-
   logCalls = (args...) ->
-    log.push args
+    logCalls.log.push args
 
     if func?
       func.apply(null, args)
 
-  logCalls.log = log
   logCalls.wrapped = func
+
+  logCalls.clear = -> logCalls.log = []
+  logCalls.clear()
 
   logCalls
 
@@ -52,6 +52,27 @@ describe "aggregate", ->
       expect(callback.log).to.eql([[null, {'1': 'result_1'}]])
 
       done()
+
+  it "works consecutively", (done) ->
+    aggregated(['1'], callback)
+
+    doubleTick ->
+      expect(wrapped.log.length).to.eql(1)
+      expect(wrapped.log[0][0]).to.eql(['1'])
+      expect(callback.log).to.eql([[null, {'1': 'result_1'}]])
+
+      wrapped.clear()
+      callback.clear()
+
+      aggregated(['1'], callback)
+
+      doubleTick ->
+        expect(wrapped.log.length).to.eql(1)
+        expect(wrapped.log[0][0]).to.eql(['1'])
+        expect(callback.log).to.eql([[null, {'1': 'result_1'}]])
+        
+        done()
+
 
   it "helper for single", (done) ->
     aggregatedForSingle = aggregated.forSingleId()

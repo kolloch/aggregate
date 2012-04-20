@@ -1,7 +1,7 @@
 Aggregate.js
 =============
 
-ATTENTION: Still has some pretty serious bugs. (e.g. not reset between calls)
+ATTENTION: Still basically untested.
 
 Making aggregating multiple similar asynchronous requests easy.
 

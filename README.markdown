@@ -1,6 +1,8 @@
 Aggregate.js
 =============
 
+ATTENTION: Still has some pretty serious bugs. (e.g. not reset between calls)
+
 Making aggregating multiple similar asynchronous requests easy.
 
 During a tick calls to specially wrapped functions are aggregated. The aggregated function is then executed exactly once. The results are demultiplexed to the individual callers.

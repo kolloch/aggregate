@@ -30,7 +30,7 @@ describe "aggregate", ->
   beforeEach (done) ->
     wrapped    = logger(simulated)
     callback   = logger()
-    aggregated = aggregate(wrapped)
+    aggregated = aggregate.getterByIds(wrapped)
     done()
 
   it "prevents emtpy calls", (done) ->
@@ -106,7 +106,7 @@ describe "aggregate", ->
   it "batchSize", (done) ->
     callback2 = logger()
 
-    aggregated = aggregate({batchSize: 2}, wrapped)
+    aggregated = aggregate.getterByIds({batchSize: 2}, wrapped)
 
     aggregated(['1'], callback)
     aggregated(['1', '2', '3'], callback2)

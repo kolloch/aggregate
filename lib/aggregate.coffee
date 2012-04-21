@@ -48,7 +48,7 @@ resultCollector = (callback) ->
       collectResults
   }
 
-aggregate = (opts, func) ->
+getterByIds = (opts, func) ->
   unless func?
     func = opts
     opts = {}
@@ -113,5 +113,5 @@ aggregate = (opts, func) ->
   ret.forSingleId = forSingleId
 
   return ret
- 
-module.exports = aggregate
+
+module.exports = {getterByIds}

@@ -102,3 +102,28 @@ describe "aggregate", ->
       expect(callback2.log).to.eql([[null, {'1': 'result_1', '2':'result_2', '3':'result_3'}]])
 
       done()
+
+  it "batchSize", (done) ->
+    callback2 = logger()
+
+    aggregated = aggregate({batchSize: 2}, wrapped)
+
+    aggregated(['1'], callback)
+    aggregated(['1', '2', '3'], callback2)
+
+    doubleTick ->
+      expect(wrapped.log.length).to.eql(2)
+
+      allKeys = {}
+      for logEntry in wrapped.log
+        [ids] = logEntry
+        expect(ids.length).to.be.lessThan(3)
+        for id in ids
+          allKeys[id] = 1
+
+      expect(allKeys).to.eql({'1': 1, '2': 1, '3': 1})
+
+      expect(callback.log).to.eql([[null, {'1': 'result_1'}]])
+      expect(callback2.log).to.eql([[null, {'1': 'result_1', '2':'result_2', '3':'result_3'}]])
+
+      done()

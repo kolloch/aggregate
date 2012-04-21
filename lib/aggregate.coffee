@@ -9,23 +9,60 @@ forSingleId = ->
       else
         callback null, result[id]
 
+# Merge the resultMaps of multiple callbacks
+# and forward them to another callback when done
+#
+# Usage:
+#   callback = (err, resultMap) ->
+#        ...
+#
+#   collector = resultCollector(10, callback)
+#   myFirstCall( param, collector.collect())
+#   mySecondCall( param, collector.collect())
+#
+#   # After both callbacks have been called 
+#   # callback null, mergedResultMaps is called
+resultCollector = (callback) ->
+  resultsLeft = 0
+  collectedResults = {}
+  errorReported = false
+
+  collectResults = (err, result) ->
+    if errorReported
+      return
+
+    if err?
+      callback err
+      errorReported = true
+      return
+
+    collectedResults[key] = result[key] for key of result
+    resultsLeft--
+
+    if resultsLeft == 0
+      callback null, collectedResults
+
+  return {
+    collect: ->
+      resultsLeft++
+      collectResults
+  }
+
 aggregate = (opts, func) ->
   unless func?
     func = opts
     opts = {}
 
+  batchSize = opts.batchSize || 500
+
+  if batchSize <= 0
+    throw new Error('batchSize must be > 0')
+
   keys  = {} 
   calls = []
 
-  performCall = logger.tracer 'performCall', ->
-    keysAsArray = (k for k of keys)
-    processResults = createProcessResultsForCalls calls
-  
-    keys  = {} 
-    calls = []
-
-    func keysAsArray, processResults
-
+  # creates a callback which demultiplexes
+  # the results to the given calls
   createProcessResultsForCalls = (calls) ->
     return logger.tracer 'processResults', (err,results) ->
       if err?
@@ -42,6 +79,22 @@ aggregate = (opts, func) ->
                 idResults[id] = result
 
             callback null, idResults
+
+  # Create the batched calls
+  performCall = logger.tracer 'performCall', ->
+    keysAsArray = (k for k of keys)
+    processResults = createProcessResultsForCalls calls
+  
+    # reset
+    keys  = {} 
+    calls = []
+
+    collector = resultCollector(processResults)
+
+    while keysAsArray.length > 0
+      batch = keysAsArray.slice(0, batchSize)
+      func batch, collector.collect()
+      keysAsArray = keysAsArray.slice(batchSize)
 
   ret = (idArray, callback) ->
     if idArray.length == 0

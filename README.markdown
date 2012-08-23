@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/kolloch/aggregate.png)](http://travis-ci.org/kolloch/aggregate)
 Aggregate.js
 =============
 
